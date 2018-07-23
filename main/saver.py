@@ -54,7 +54,7 @@ class GisParser(unittest.TestCase):
 
                 address = driver.find_element_by_class_name("miniCard__address")
                 file.write(address)
-                
+
                 phones = driver.find_elements_by_class_name("contact__phonesItemLink")
                 for phone in phones:
                     if phone.get_attribute('text'):
