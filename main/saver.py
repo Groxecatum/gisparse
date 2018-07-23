@@ -48,9 +48,13 @@ class GisParser(unittest.TestCase):
             for article in articles:
                 time.sleep(random.randint(2, 3))
                 article.click()
+
                 name = driver.find_element_by_class_name("link miniCard__headerTitleLink")
                 file.write(name)
 
+                address = driver.find_element_by_class_name("miniCard__address")
+                file.write(address)
+                
                 phones = driver.find_elements_by_class_name("contact__phonesItemLink")
                 for phone in phones:
                     if phone.get_attribute('text'):
