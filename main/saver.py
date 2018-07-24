@@ -8,7 +8,6 @@ import random
 
 FILENAME = '1st.csv'
 START_WITH = 1
-TRESHOLD = 450
 
 class GisParser(unittest.TestCase):
 
@@ -21,16 +20,16 @@ class GisParser(unittest.TestCase):
     def test_save(self):
         driver = self.driver
         file = open(FILENAME, "a")
-        page = 1
+        page = START_WITH
         while True:
             driver.get("https://2gis.kz/almaty/search/салон красоты/page/" + str(page))
             articles = driver.find_elements_by_xpath("//article")
-            time.sleep(random.randint(2, 3))
+            #time.sleep(random.randint(2, 3))
             if not articles:
                 break
 
             for article in articles:
-                time.sleep(random.randint(2, 3))
+                #time.sleep(random.randint(2, 3))
                 article.click()
 
                 name = article.find_element_by_class_name("miniCard__headerTitleLink")
@@ -38,7 +37,7 @@ class GisParser(unittest.TestCase):
                 if name:
                     nameStr = name.get_attribute('text').replace(",", " ")
 
-                print nameStr
+                #print nameStr
                 file.write(('\n' + nameStr).encode('utf-8'))
 
                 address = article.find_element_by_class_name("miniCard__address")
@@ -47,11 +46,12 @@ class GisParser(unittest.TestCase):
                 if address:
                     addressStr = address.get_attribute('innerHTML').replace(",", " ").replace("&nbsp;", "")
 
-                print addressStr
+                #print addressStr
                 file.write(("," + addressStr).encode('utf-8'))
 
+                card = driver.find_element_by_class_name("_cont_card")
                 # Именно Driver - ищем не в article
-                phones = driver.find_elements_by_class_name("contact__phonesItemLink")
+                phones = card.find_elements_by_class_name("contact__phonesItemLink")
                 for phone in phones:
                     phoneStr = ''
                     if phone:
@@ -59,7 +59,11 @@ class GisParser(unittest.TestCase):
 
                     if phoneStr:
                         file.write(("," + phoneStr).encode('utf-8'))
-                        print phoneStr
+                        #print phoneStr
+
+                closeButton = card.find_element_by_class_name("_close")
+                if closeButton:
+                    closeButton.click()
             page += 1
 
     def tearDown(self):
